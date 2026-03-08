@@ -23,7 +23,7 @@ const DASHBOARD_CONFIG = {
             }
         },
         pageTurn: {
-        url: 'https://dineshraj66.github.io/PageTurn/',
+        url: 'https://dineshraj66.github.io/Page_Turn/',
         firebase: {
         apiKey: "AIzaSyD-2SCMUJsrkmmWo4IUmWpjPu5TC99C-ho",
         projectId: "book-tracker-5bc5f",
@@ -34,7 +34,7 @@ const DASHBOARD_CONFIG = {
         }
         },
         dailyReminder: {
-            url: 'https://dineshraj66.github.io/DailyReminder/',
+            url: 'https://dineshraj66.github.io/Daily-Reminder-App/',
             firebase: {
                 apiKey: "AIzaSyAAfFKsEwc-ZrKmtnKaCOMIB03es0dRu38",
                 projectId: "taskreminderapp-28eeb",
@@ -42,7 +42,7 @@ const DASHBOARD_CONFIG = {
             }
         },
         lifeLog: {
-        url: 'https://dineshraj66.github.io/LifeLog/',
+        url: 'https://dineshraj66.github.io/Life_Log/',
         firebase: {
         apiKey: "AIzaSyCXK_X1e_K_-Wz-gE_9g6dm96vMLdKViq4",
         projectId: "daily-events-a3151",
@@ -53,7 +53,7 @@ const DASHBOARD_CONFIG = {
         }
         },
         tradeTracker: {
-        url: 'https://dineshraj66.github.io/TradeTracker/',
+        url: 'https://dineshraj66.github.io/Trade-Tracker/',
         firebase: {
         apiKey: "AIzaSyCr5O3rDc-UfazAwnqTS8KOEvn22ksHu3U",
         projectId: "trade-tracker-71027",
@@ -64,7 +64,7 @@ const DASHBOARD_CONFIG = {
         }
         },
         loveToday: {
-        url: 'https://dineshraj66.github.io/LoveToday/',
+        url: 'https://dineshraj66.github.io/Love-Today/',
         firebase: {
         apiKey: "AIzaSyAtmbfK7tKPTioxoQuC0kqq9Y0MGC95wPE",
         projectId: "love-today-231dc",
@@ -75,7 +75,7 @@ const DASHBOARD_CONFIG = {
         }
         },
         cashLedger: {
-            url: 'https://dineshraj66.github.io/CashLedger/',
+            url: 'https://dineshraj66.github.io/Cash-Ledger/',
             firebase: {
                 apiKey: "AIzaSyD8R4KazYZRrms8PBb6Ok7UI5XQQed9v8s",
                 projectId: "cashledger-project-id",
@@ -83,7 +83,7 @@ const DASHBOARD_CONFIG = {
             }
         },
         angryBird: {
-            url: 'https://dineshraj66.github.io/AngryBird/',
+            url: 'https://dineshraj66.github.io/Angry-Bird/angry-bird-app.html',
             firebase: {
                 apiKey: "AIzaSyAtgu0H9O1pj3abAOHUpM6qdrIGzw9WRYc",
                 projectId: "angry-bird-2776f",
