@@ -117,32 +117,37 @@
 
         @media (max-width: 1024px) {
             .dashboard {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
             }
         }
 
         @media (max-width: 768px) {
             .dashboard {
-                grid-template-columns: 1fr;
-                gap: 16px;
-                padding: 24px 12px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 16px 8px;
+            }
+            
+            .container {
+                padding: 16px 8px;
             }
 
             .header {
-                padding: 16px 12px;
+                padding: 12px 8px;
             }
 
             .header-content {
-                gap: 12px;
+                gap: 8px;
             }
 
             .medal-container {
-                width: 60px;
-                height: 80px;
+                width: 50px;
+                height: 65px;
             }
 
             .header-text h1 {
-                font-size: 24px;
+                font-size: 20px;
             }
         }
 

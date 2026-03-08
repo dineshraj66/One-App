@@ -1,6 +1,6 @@
 {
-  "name": "Life Dashboard - Championship Living",
-  "short_name": "Life Dashboard",
+  "name": "One App - Championship Living",
+  "short_name": "One App",
   "description": "Champion your life with a unified dashboard connecting 8 personal life management apps",
   "start_url": "./dashboard.html",
   "scope": "./",
@@ -19,15 +19,21 @@
   ],
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><defs><radialGradient id='goldGrad' cx='40%' cy='40%'><stop offset='0%' style='stop-color:%23ffd700;stop-opacity:1' /><stop offset='100%' style='stop-color:%23daa520;stop-opacity:1' /></radialGradient></defs><rect fill='%231a1a2e' width='192' height='192' rx='45'/><circle cx='96' cy='80' r='55' fill='url(%23goldGrad)'/><circle cx='96' cy='80' r='50' fill='none' stroke='%23b8860b' stroke-width='2'/><text x='96' y='95' font-size='40' font-weight='bold' fill='%23654321' text-anchor='middle'>1</text><path d='M70 50 Q60 35 80 25 Q92 20 100 30' fill='%23228b22' opacity='0.6'/><path d='M122 50 Q132 35 112 25 Q100 20 92 30' fill='%23228b22' opacity='0.6'/></svg>",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><defs><radialGradient id='goldGrad2' cx='40%' cy='40%'><stop offset='0%' style='stop-color:%23ffd700;stop-opacity:1' /><stop offset='100%' style='stop-color:%23daa520;stop-opacity:1' /></radialGradient></defs><circle cx='96' cy='96' r='96' fill='%231a1a2e'/><circle cx='96' cy='80' r='55' fill='url(%23goldGrad2)'/><circle cx='96' cy='80' r='50' fill='none' stroke='%23b8860b' stroke-width='2'/><text x='96' y='95' font-size='40' font-weight='bold' fill='%23654321' text-anchor='middle'>1</text><path d='M70 50 Q60 35 80 25 Q92 20 100 30' fill='%23228b22' opacity='0.6'/><path d='M122 50 Q132 35 112 25 Q100 20 92 30' fill='%23228b22' opacity='0.6'/></svg>",
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],
