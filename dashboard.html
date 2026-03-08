@@ -177,6 +177,64 @@
         .app-tile:nth-child(7) { animation-delay: 0.4s; }
         .app-tile:nth-child(8) { animation-delay: 0.45s; }
 
+        /* Unique Colors for Each App */
+        /* HappyFamily - Purple/Pink */
+        .app-tile:nth-child(1) {
+            background: linear-gradient(135deg, #2d1b4e 0%, #3d0051 100%);
+            border-color: #d946ef;
+        }
+
+        /* PageTurn - Cyan/Blue */
+        .app-tile:nth-child(2) {
+            background: linear-gradient(135deg, #0f3a4a 0%, #0d5a6d 100%);
+            border-color: #00d4ff;
+        }
+
+        /* DailyReminder - Indigo/Blue */
+        .app-tile:nth-child(3) {
+            background: linear-gradient(135deg, #1e1a4d 0%, #2d1a5f 100%);
+            border-color: #818cf8;
+        }
+
+        /* LifeLog - Blue/Cyan */
+        .app-tile:nth-child(4) {
+            background: linear-gradient(135deg, #0c3e47 0%, #1a5f7a 100%);
+            border-color: #0ea5e9;
+        }
+
+        /* TradeTracker - Green */
+        .app-tile:nth-child(5) {
+            background: linear-gradient(135deg, #1b3d2e 0%, #0f5f3d 100%);
+            border-color: #10b981;
+        }
+
+        /* LoveToday - Amber/Orange */
+        .app-tile:nth-child(6) {
+            background: linear-gradient(135deg, #4a2e1a 0%, #6d3d1a 100%);
+            border-color: #f59e0b;
+        }
+
+        /* CashLedger - Red */
+        .app-tile:nth-child(7) {
+            background: linear-gradient(135deg, #4a1a1a 0%, #6d1a1a 100%);
+            border-color: #ef4444;
+        }
+
+        /* AngryBird - Pink */
+        .app-tile:nth-child(8) {
+            background: linear-gradient(135deg, #3d1a4a 0%, #5d1a5f 100%);
+            border-color: #ec4899;
+        }
+
+        .app-tile:nth-child(1):hover { border-color: #d946ef; box-shadow: 0 20px 40px rgba(217, 70, 239, 0.15); }
+        .app-tile:nth-child(2):hover { border-color: #00d4ff; box-shadow: 0 20px 40px rgba(0, 212, 255, 0.15); }
+        .app-tile:nth-child(3):hover { border-color: #818cf8; box-shadow: 0 20px 40px rgba(129, 140, 248, 0.15); }
+        .app-tile:nth-child(4):hover { border-color: #0ea5e9; box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15); }
+        .app-tile:nth-child(5):hover { border-color: #10b981; box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15); }
+        .app-tile:nth-child(6):hover { border-color: #f59e0b; box-shadow: 0 20px 40px rgba(245, 158, 11, 0.15); }
+        .app-tile:nth-child(7):hover { border-color: #ef4444; box-shadow: 0 20px 40px rgba(239, 68, 68, 0.15); }
+        .app-tile:nth-child(8):hover { border-color: #ec4899; box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15); }
+
         .app-tile::before {
             content: '';
             position: absolute;
@@ -250,7 +308,7 @@
             position: relative;
             width: 140px;
             height: 140px;
-            margin: 0 auto;
+            margin: 16px auto;
         }
 
         .progress-svg {
@@ -277,13 +335,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            gap: 2px;
         }
 
         .progress-value {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
             font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: -1px;
         }
 
         .progress-unit {
