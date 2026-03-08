@@ -453,12 +453,31 @@
         <p>Dashboard synced in real-time • Tap an app to open it</p>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+    <!-- Load configuration FIRST -->
+    <script src="config.js"></script>
+    
+    <!-- Firebase SDKs - Using Compat for better compatibility -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
     <script>
+        // ============ FIREBASE INITIALIZATION ============
+        // console.log('🚀 Starting Firebase initialization...');
+        
+        try {
+            // Get HappyFamily config from config.js
+            const happyFamilyConfig = getFirebaseConfig('happyFamily');
+            
+            // Initialize Firebase with HappyFamily config first
+            firebase.initializeApp(happyFamilyConfig, 'happyfamily');
+            
+            // console.log('✅ Firebase initialized successfully');
+            // console.log('📱 Firebase app:', firebase.app('happyfamily'));
+        } catch (err) {
+            console.error('❌ Firebase initialization error:', err.message);
+        }
+
         // App Configuration in specific order: 2 columns, 4 rows
         const APPS = [
             // Row 1
@@ -467,21 +486,17 @@
                 name: 'HappyFamily',
                 icon: '👨‍👩‍👧‍👦',
                 color: 'purple',
-                url: 'https://dineshraj66.github.io/HappyFamily/',
+                url: getAppUrl('happyFamily'),
                 description: 'Tasks assigned to Dinesh',
                 type: 'stat',
-                firebaseConfig: {
-                    apiKey: "AIzaSyCtd4RP2qPuB3zJZbEsG0FBqb8OQ1EeHqI",
-                    projectId: "happyfamily-e4f68",
-                    databaseURL: "https://happyfamily-e4f68-default-rtdb.asia-southeast1.firebasedatabase.app"
-                }
+                firebaseConfig: getFirebaseConfig('happyFamily')
             },
             {
                 id: 'pageTurn',
                 name: 'PageTurn',
                 icon: '📖',
                 color: 'cyan',
-                url: 'https://dk-pageturn.github.io/PageTurn/',
+                url: getAppUrl('pageTurn'),
                 description: 'Current book reading progress',
                 type: 'progress'
             },
@@ -491,7 +506,7 @@
                 name: 'Daily Reminder',
                 icon: '🔔',
                 color: 'indigo',
-                url: 'https://dk-dailyreminder.github.io/DailyReminder/',
+                url: getAppUrl('dailyReminder'),
                 description: 'Reminders for today',
                 type: 'stat'
             },
@@ -500,7 +515,7 @@
                 name: 'Life Log',
                 icon: '📔',
                 color: 'blue',
-                url: 'https://dk-lifelog.github.io/LifeLog/',
+                url: getAppUrl('lifeLog'),
                 description: 'Hours logged today',
                 type: 'stat'
             },
@@ -510,7 +525,7 @@
                 name: 'Trade Tracker',
                 icon: '📈',
                 color: 'green',
-                url: 'https://dk-tradetracker.github.io/TradeTracker/',
+                url: getAppUrl('tradeTracker'),
                 description: 'Goal progress',
                 type: 'progress'
             },
@@ -519,7 +534,7 @@
                 name: 'Love Today',
                 icon: '💕',
                 color: 'amber',
-                url: 'https://dk-lovetoday.github.io/LoveToday/',
+                url: getAppUrl('loveToday'),
                 description: 'Activities today',
                 type: 'stat'
             },
@@ -529,7 +544,7 @@
                 name: 'Cash Ledger',
                 icon: '💰',
                 color: 'red',
-                url: 'https://dk-cashledger.github.io/CashLedger/',
+                url: getAppUrl('cashLedger'),
                 description: 'Total cash entries today',
                 type: 'stat'
             },
@@ -538,7 +553,7 @@
                 name: 'Angry Bird',
                 icon: '😠',
                 color: 'pink',
-                url: 'https://dk-angrybird.github.io/AngryBird/',
+                url: getAppUrl('angryBird'),
                 description: 'Entries logged today',
                 type: 'stat'
             }
@@ -651,42 +666,532 @@
         // ============ HAPPYFAMILY - REALTIME DATABASE ============
         async function getHappyFamilyData(db) {
             try {
-                // Your structure: happyFamily/items/[itemId]
-                // Fields: assignTo (who it's assigned to), status (pending/done)
-                const snapshot = await db.ref('happyFamily/items').get();
+                const snapshot = await db.ref('happyfamily/tasks').get();
                 
                 if (!snapshot.exists()) {
                     return { value: '0' };
                 }
 
-                const items = snapshot.val();
+                const tasks = snapshot.val();
                 let count = 0;
 
-                // Count items assigned to "Dinesh" with status != "done"
-                Object.keys(items).forEach(key => {
-                    const item = items[key];
-                    // Check: assignTo == "Dinesh" (capital D) AND status != "done"
-                    if (item.assignTo === 'Dinesh' && item.status !== 'done') {
-                        count++;
+                Object.keys(tasks).forEach(taskId => {
+                    const task = tasks[taskId];
+                    
+                    if (task.items && typeof task.items === 'object') {
+                        Object.keys(task.items).forEach(itemIndex => {
+                            const item = task.items[itemIndex];
+                            
+                            if (item.assignTo === 'Dinesh' && item.status !== 'done') {
+                                count++;
+                            }
+                        });
                     }
                 });
 
                 return { value: count.toString() };
             } catch (e) {
-                console.error('HappyFamily error:', e);
+                console.error('❌ HappyFamily error:', e);
                 return { value: '--' };
             }
         }
 
+        // ============ PAGETURN - FIRESTORE ============
+        async function getPageTurnData() {
+            try {
+                // console.log('🔍 getPageTurnData called');
+                
+                // Get PageTurn Firebase config from config.js
+                const pageTurnConfig = getFirebaseConfig('pageTurn');
+                
+                // Initialize PageTurn Firebase app if not already done
+                let pageTurnApp;
+                try {
+                    pageTurnApp = firebase.app('pageturn');
+                } catch (e) {
+                    pageTurnApp = firebase.initializeApp(pageTurnConfig, 'pageturn');
+                }
+                
+                // Initialize Firestore for this app
+                const db = pageTurnApp.firestore();
+                
+                // Query: Get ALL books (no where clause needed - no index!)
+                const snapshot = await db
+                    .collection('books')
+                    .get();
+                
+                // console.log('📚 Total books:', snapshot.size);
+                
+                if (snapshot.empty) {
+                    // console.log('❌ No books found');
+                    return { value: '0%' };
+                }
+
+                // Filter in JavaScript: get books with status='reading' AND currentPage > 0
+                // Then pick the one with highest currentPage
+                let highestProgressBook = null;
+                let highestProgress = 0;
+                
+                snapshot.forEach(doc => {
+                    const bookData = doc.data();
+                    // Only consider reading books with progress > 0
+                    if (bookData.status === 'reading' && (bookData.currentPage || 0) > 0) {
+                        const progress = bookData.currentPage || 0;
+                        if (progress > highestProgress) {
+                            highestProgress = progress;
+                            highestProgressBook = bookData;
+                        }
+                    }
+                });
+                
+                if (!highestProgressBook) {
+                    // console.log('❌ No books with status "reading" and currentPage > 0');
+                    return { value: '0%' };
+                }
+                
+                const book = highestProgressBook;
+                // console.log('📖 Current book:', book);
+                
+                // Calculate progress percentage
+                const currentPage = book.currentPage || 0;
+                const totalPages = book.totalPages || 1;
+                const progressPercent = Math.round((currentPage / totalPages) * 100);
+                
+                // console.log(`✅ Progress: ${currentPage}/${totalPages} = ${progressPercent}%`);
+                return { value: progressPercent };
+            } catch (e) {
+                console.error('❌ PageTurn error:', e);
+                console.error('Stack:', e.stack);
+                return { value: '--' };
+            }
+        }
+
+        // ============ DAILY REMINDER - REALTIME DATABASE ============
+        async function getDailyReminderData(db) {
+            try {
+                // console.log('🔍 getDailyReminderData called');
+                
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date();
+                const todayString = today.toISOString().split('T')[0]; // "2026-03-08"
+                // console.log(`📅 Today's date: ${todayString}`);
+                
+                // Read all reminders from Realtime Database
+                const snapshot = await db.ref('reminders').get();
+                
+                // console.log('📋 Reminders snapshot exists:', snapshot.exists());
+                
+                if (!snapshot.exists()) {
+                    // console.log('❌ No reminders found');
+                    return { value: '0' };
+                }
+
+                const reminders = snapshot.val();
+                // console.log('📋 All reminders:', reminders);
+                let todayCount = 0;
+
+                // Loop through all reminders
+                Object.keys(reminders).forEach(reminderId => {
+                    const reminder = reminders[reminderId];
+                    // console.log(`🔎 Checking reminder ${reminderId}:`, reminder);
+                    
+                    // Extract date from datetime field (format: "2026-03-08T09:06:00.000Z")
+                    if (reminder.datetime) {
+                        const reminderDate = reminder.datetime.split('T')[0]; // Get YYYY-MM-DD part
+                        // console.log(`   datetime: ${reminder.datetime}, date: ${reminderDate}`);
+                        
+                        // Check if reminder is for today
+                        if (reminderDate === todayString) {
+                            // console.log(`   ✓ TODAY'S REMINDER - COUNTED`);
+                            todayCount++;
+                        } else {
+                            // console.log(`   ✗ Not today (${reminderDate} != ${todayString})`);
+                        }
+                    }
+                });
+
+                // console.log(`✅ Final count: ${todayCount} reminders today`);
+                return { value: todayCount.toString() };
+            } catch (e) {
+                console.error('❌ DailyReminder error:', e);
+                console.error('Stack:', e.stack);
+                return { value: '--' };
+            }
+        }
+
+        // ============ LIFELOG - FIRESTORE ============
+        async function getLifeLogData() {
+            try {
+                // console.log('🔍 getLifeLogData called');
+                
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date();
+                const todayString = today.toISOString().split('T')[0]; // "2026-03-08"
+                // console.log(`📅 Today's date: ${todayString}`);
+                
+                // Get LifeLog Firebase config from config.js
+                const lifeLogConfig = getFirebaseConfig('lifeLog');
+                
+                // Initialize LifeLog Firebase app if not already done
+                let lifeLogApp;
+                try {
+                    lifeLogApp = firebase.app('lifelog');
+                } catch (e) {
+                    lifeLogApp = firebase.initializeApp(lifeLogConfig, 'lifelog');
+                }
+                
+                // Get Firestore instance
+                const db = lifeLogApp.firestore();
+                
+                // Query: Get all events for user "dinesh"
+                const snapshot = await db
+                    .collection('userdata')
+                    .doc('dinesh')
+                    .collection('events')
+                    .get();
+                
+                // console.log('📋 Events snapshot size:', snapshot.size);
+                
+                if (snapshot.empty) {
+                    // console.log('❌ No events found');
+                    return { value: '0 hrs' };
+                }
+
+                let totalMinutes = 0;
+
+                // Loop through all events
+                snapshot.forEach(doc => {
+                    const event = doc.data();
+                    // console.log(`🔎 Checking event:`, event);
+                    
+                    // Check if event has startDate and endDate
+                    if (event.startDate && event.endDate) {
+                        // Extract date from startDate (format: "2026-02-20T06:30")
+                        const eventDate = event.startDate.split('T')[0]; // "2026-02-20"
+                        // console.log(`   startDate: ${event.startDate}, date: ${eventDate}`);
+                        
+                        // Check if event is for today
+                        if (eventDate === todayString) {
+                            // Calculate duration in minutes
+                            const startTime = new Date(event.startDate);
+                            const endTime = new Date(event.endDate);
+                            const durationMinutes = (endTime - startTime) / (1000 * 60);
+                            
+                            // console.log(`   ✓ TODAY'S EVENT - Duration: ${durationMinutes} minutes`);
+                            totalMinutes += durationMinutes;
+                        } else {
+                            // console.log(`   ✗ Not today (${eventDate} != ${todayString})`);
+                        }
+                    }
+                });
+
+                // Convert minutes to hours with decimal
+                const totalHours = (totalMinutes / 60).toFixed(1);
+                // console.log(`✅ Final total: ${totalMinutes} minutes = ${totalHours} hours`);
+                return { value: `${totalHours} hrs` };
+            } catch (e) {
+                console.error('❌ LifeLog error:', e);
+                console.error('Stack:', e.stack);
+                return { value: '--' };
+            }
+        }
+
+        // ============ TRADE TRACKER - FIRESTORE ============
+        async function getTradeTrackerData() {
+            try {
+                // console.log('🔍 getTradeTrackerData called');
+                
+                // Get TradeTracker Firebase config from config.js
+                const tradeTrackerConfig = getFirebaseConfig('tradeTracker');
+                
+                // Initialize TradeTracker Firebase app if not already done
+                let tradeTrackerApp;
+                try {
+                    tradeTrackerApp = firebase.app('tradetracker');
+                } catch (e) {
+                    tradeTrackerApp = firebase.initializeApp(tradeTrackerConfig, 'tradetracker');
+                }
+                
+                // Get Firestore instance
+                const db = tradeTrackerApp.firestore();
+                
+                // Query 1: Get target value from settings/target
+                const targetSnapshot = await db
+                    .collection('settings')
+                    .doc('target')
+                    .get();
+                
+                // Check if document exists (compat SDK: check if data exists)
+                const targetData = targetSnapshot.data();
+                if (!targetData) {
+                    console.log('❌ TradeTracker: No target found');
+                    return { value: '0%' };
+                }
+
+                const targetValue = targetData.value || 1;
+                console.log('🎯 TradeTracker Target value:', targetValue);
+                
+                // Query 2: Count all trades
+                const tradesSnapshot = await db
+                    .collection('trades')
+                    .get();
+                
+                console.log('📊 TradeTracker Total trades count:', tradesSnapshot.size);
+                const tradesCount = tradesSnapshot.size;
+                
+                // Calculate progress percentage
+                const progressPercent = Math.round((tradesCount / targetValue) * 100);
+                
+                console.log(`✅ TradeTracker Progress: ${tradesCount}/${targetValue} = ${progressPercent}%`);
+                return { value: progressPercent };
+            } catch (e) {
+                console.error('❌ TradeTracker error:', e);
+                console.error('Stack:', e.stack);
+                return { value: '--' };
+            }
+        }
+
+        // ============ LOVE TODAY - FIRESTORE ============
+        async function getLoveTodayData() {
+            try {
+                console.log('💕 getLoveTodayData called');
+                
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date();
+                const todayString = today.toISOString().split('T')[0]; // "2026-03-08"
+                console.log(`💕 Today's date: ${todayString}`);
+                
+                // Get LoveToday Firebase config from config.js
+                const loveTodayConfig = getFirebaseConfig('loveToday');
+                
+                // Initialize LoveToday Firebase app if not already done
+                let loveTodayApp;
+                try {
+                    loveTodayApp = firebase.app('lovetoday');
+                } catch (e) {
+                    loveTodayApp = firebase.initializeApp(loveTodayConfig, 'lovetoday');
+                }
+                
+                // Get Firestore instance
+                const db = loveTodayApp.firestore();
+                
+                // Query: Get all entries for user "u_ODcyOTI2"
+                const snapshot = await db
+                    .collection('users')
+                    .doc('u_ODcyOTI2')
+                    .collection('entries')
+                    .get();
+                
+                console.log('💕 Entries snapshot size:', snapshot.size);
+                
+                if (snapshot.empty) {
+                    console.log('❌ LoveToday: No entries found');
+                    return { value: '0' };
+                }
+
+                let todayCount = 0;
+
+                // Loop through all entries
+                snapshot.forEach(doc => {
+                    const entry = doc.data();
+                    
+                    // Check if entry has datetime field
+                    if (entry.datetime) {
+                        // Extract date from datetime (format: "2026-03-08T11:22")
+                        const entryDate = entry.datetime.split('T')[0]; // "2026-03-08"
+                        console.log(`   datetime: ${entry.datetime}, date: ${entryDate}`);
+                        
+                        // Check if entry is for today
+                        if (entryDate === todayString) {
+                            console.log(`   ✓ TODAY'S ENTRY - COUNTED`);
+                            todayCount++;
+                        }
+                    }
+                });
+
+                console.log(`✅ LoveToday Final count: ${todayCount} entries today`);
+                return { value: todayCount.toString() };
+            } catch (e) {
+                console.error('❌ LoveToday error:', e);
+                console.error('Stack:', e.stack);
+                return { value: '--' };
+            }
+        }
+
+        // ============ CASH LEDGER - REALTIME DATABASE ============
+        async function getCashLedgerData(db) {
+            try {
+                console.log('💰 getCashLedgerData called');
+                
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date();
+                const todayString = today.toISOString().split('T')[0]; // "2026-03-08"
+                console.log(`💰 Today's date: ${todayString}`);
+                
+                // Read all entries from Realtime Database
+                const snapshot = await db.ref('entries').get();
+                
+                console.log('💰 Entries snapshot exists:', snapshot.exists());
+                
+                if (!snapshot.exists()) {
+                    console.log('❌ No entries found');
+                    return { value: '₹0' };
+                }
+
+                const entries = snapshot.val();
+                console.log('💰 All entries:', entries);
+                let totalCash = 0;
+
+                // Loop through all entries
+                Object.keys(entries).forEach(entryId => {
+                    const entry = entries[entryId];
+                    console.log(`🔎 Checking entry ${entryId}:`, entry);
+                    
+                    // Check if entry has timestamp and cash fields
+                    if (entry.timestamp && entry.cash) {
+                        // Convert timestamp (milliseconds) to date
+                        const entryDate = new Date(entry.timestamp).toISOString().split('T')[0];
+                        console.log(`   timestamp: ${entry.timestamp}, date: ${entryDate}, cash: ${entry.cash}`);
+                        
+                        // Check if entry is for today
+                        if (entryDate === todayString) {
+                            console.log(`   ✓ TODAY'S ENTRY - ADDED ₹${entry.cash}`);
+                            totalCash += parseInt(entry.cash) || 0;
+                        } else {
+                            console.log(`   ✗ Not today (${entryDate} != ${todayString})`);
+                        }
+                    }
+                });
+
+                console.log(`✅ CashLedger Final total: ₹${totalCash}`);
+                return { value: `₹${totalCash}` };
+            } catch (e) {
+                console.error('❌ CashLedger error:', e);
+                console.error('Stack:', e.stack);
+                return { value: '--' };
+            }
+        }
+
+        // ============ ANGRY BIRD - REALTIME DATABASE ============
+        async function getAngryBirdData(db) {
+            try {
+                console.log('😠 getAngryBirdData called');
+                
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date();
+                const todayString = today.toISOString().split('T')[0]; // "2026-03-08"
+                console.log(`😠 Today's date: ${todayString}`);
+                
+                // Read all entries from Realtime Database
+                const snapshot = await db.ref('users/shared-user/entries').get();
+                
+                console.log('😠 Entries snapshot exists:', snapshot.exists());
+                
+                if (!snapshot.exists()) {
+                    console.log('❌ No entries found');
+                    return { value: '0' };
+                }
+
+                const entries = snapshot.val();
+                console.log('😠 All entries:', entries);
+                let todayCount = 0;
+
+                // Loop through all entries
+                Object.keys(entries).forEach(entryId => {
+                    const entry = entries[entryId];
+                    console.log(`🔎 Checking entry ${entryId}:`, entry);
+                    
+                    // Check if entry has date field
+                    if (entry.date) {
+                        // Extract date from date field (format: "2026-03-06T15:15")
+                        const entryDate = entry.date.split('T')[0]; // "2026-03-06"
+                        console.log(`   date: ${entry.date}, extracted: ${entryDate}`);
+                        
+                        // Check if entry is for today
+                        if (entryDate === todayString) {
+                            console.log(`   ✓ TODAY'S ENTRY - COUNTED`);
+                            todayCount++;
+                        } else {
+                            console.log(`   ✗ Not today (${entryDate} != ${todayString})`);
+                        }
+                    }
+                });
+
+                console.log(`✅ AngryBird Final count: ${todayCount} entries today`);
+                return { value: todayCount.toString() };
+            } catch (e) {
+                console.error('❌ AngryBird error:', e);
+                console.error('Stack:', e.stack);
+                return { value: '--' };
+            }
+        }
         async function getAppMetrics(app) {
             try {
                 // Initialize Firebase Realtime Database for HappyFamily
                 if (app.id === 'happyFamily') {
-                    if (!app.db) {
-                        const appInstance = firebase.initializeApp(app.firebaseConfig, app.id);
-                        app.db = firebase.database(appInstance);
+                    // Use the pre-initialized Firebase app
+                    const appInstance = firebase.app('happyfamily');
+                    const db = firebase.database(appInstance);
+                    return await getHappyFamilyData(db);
+                }
+
+                // Initialize Firebase Firestore for PageTurn
+                if (app.id === 'pageTurn') {
+                    return await getPageTurnData();
+                }
+
+                // Initialize Firebase Realtime Database for DailyReminder
+                if (app.id === 'dailyReminder') {
+                    const dailyReminderConfig = getFirebaseConfig('dailyReminder');
+                    let dailyReminderApp;
+                    try {
+                        dailyReminderApp = firebase.app('dailyreminder');
+                    } catch (e) {
+                        dailyReminderApp = firebase.initializeApp(dailyReminderConfig, 'dailyreminder');
                     }
-                    return await getHappyFamilyData(app.db);
+                    const db = firebase.database(dailyReminderApp);
+                    return await getDailyReminderData(db);
+                }
+
+                // Initialize Firebase Firestore for LifeLog
+                if (app.id === 'lifeLog') {
+                    return await getLifeLogData();
+                }
+
+                // Initialize Firebase Firestore for TradeTracker
+                if (app.id === 'tradeTracker') {
+                    return await getTradeTrackerData();
+                }
+
+                // Initialize Firebase Firestore for LoveToday
+                if (app.id === 'loveToday') {
+                    return await getLoveTodayData();
+                }
+
+                // Initialize Firebase Realtime Database for CashLedger
+                if (app.id === 'cashLedger') {
+                    const cashLedgerConfig = getFirebaseConfig('cashLedger');
+                    let cashLedgerApp;
+                    try {
+                        cashLedgerApp = firebase.app('cashledger');
+                    } catch (e) {
+                        cashLedgerApp = firebase.initializeApp(cashLedgerConfig, 'cashledger');
+                    }
+                    const db = firebase.database(cashLedgerApp);
+                    return await getCashLedgerData(db);
+                }
+
+                // Initialize Firebase Realtime Database for AngryBird
+                if (app.id === 'angryBird') {
+                    const angryBirdConfig = getFirebaseConfig('angryBird');
+                    let angryBirdApp;
+                    try {
+                        angryBirdApp = firebase.app('angrybird');
+                    } catch (e) {
+                        angryBirdApp = firebase.initializeApp(angryBirdConfig, 'angrybird');
+                    }
+                    const db = firebase.database(angryBirdApp);
+                    return await getAngryBirdData(db);
                 }
 
                 // Mock data for other apps (will update later)
@@ -709,7 +1214,7 @@
 
         // PWA Registration
         if ('serviceWorkerContainer' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+            navigator.serviceWorker.register('sw.js').catch(err => { /* SW registration failed */ });
         }
 
         // Initialize on load
