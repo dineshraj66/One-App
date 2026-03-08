@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="Unified Dashboard for Life Management Apps">
+    <title>Life Dashboard</title>
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231a1a2e' width='192' height='192'/><circle cx='96' cy='96' r='60' fill='%2300d4ff'/></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0f0f1e;
+            --bg-card: #1a1a2e;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #7c3aed;
+            --accent-pink: #ec4899;
+            --accent-amber: #f59e0b;
+            --accent-green: #10b981;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --border-color: #2d2d44;
+            --gold: #ffd700;
+            --gold-dark: #cc9900;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a0a2e 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(180deg, rgba(26, 26, 46, 0.8) 0%, rgba(15, 15, 30, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .medal-container {
+            position: relative;
+            width: 80px;
+            height: 100px;
+            flex-shrink: 0;
+            animation: medalBounce 2s ease-in-out infinite;
+        }
+
+        .medal-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 12px rgba(255, 215, 0, 0.3));
+        }
+
+        .header-text h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Dashboard Grid - 2 columns */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 24px 12px;
+            }
+
+            .header {
+                padding: 16px 12px;
+            }
+
+            .header-content {
+                gap: 12px;
+            }
+
+            .medal-container {
+                width: 60px;
+                height: 80px;
+            }
+
+            .header-text h1 {
+                font-size: 24px;
+            }
+        }
+
+        /* App Tile */
+        .app-tile {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(26, 26, 46, 0.5) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 220px;
+            animation: tileReveal 0.6s ease-out backwards;
+        }
+
+        .app-tile:nth-child(1) { animation-delay: 0.1s; }
+        .app-tile:nth-child(2) { animation-delay: 0.15s; }
+        .app-tile:nth-child(3) { animation-delay: 0.2s; }
+        .app-tile:nth-child(4) { animation-delay: 0.25s; }
+        .app-tile:nth-child(5) { animation-delay: 0.3s; }
+        .app-tile:nth-child(6) { animation-delay: 0.35s; }
+        .app-tile:nth-child(7) { animation-delay: 0.4s; }
+        .app-tile:nth-child(8) { animation-delay: 0.45s; }
+
+        .app-tile::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .app-tile:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .app-tile:hover::before {
+            opacity: 1;
+        }
+
+        .app-tile:active {
+            transform: translateY(-4px);
+        }
+
+        /* Tile Header */
+        .tile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tile-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 600;
+            transition: transform 0.3s ease-out;
+            flex-shrink: 0;
+        }
+
+        .app-tile:hover .tile-icon {
+            transform: scale(1.15) rotate(8deg);
+        }
+
+        .tile-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Tile Content */
+        .tile-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        /* Progress Circle */
+        .progress-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+        }
+
+        .progress-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-background {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 12;
+        }
+
+        .progress-bar {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease-out;
+        }
+
+        .progress-text {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .progress-value {
+            font-size: 32px;
+            font-weight: 800;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .progress-unit {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Simple Stat Display */
+        .stat-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            gap: 16px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .stat-column {
+            flex: 1;
+        }
+
+        /* Color Variants */
+        .icon-cyan { background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.05)); color: var(--accent-cyan); }
+        .icon-purple { background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.05)); color: var(--accent-purple); }
+        .icon-pink { background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05)); color: var(--accent-pink); }
+        .icon-amber { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05)); color: var(--accent-amber); }
+        .icon-green { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05)); color: var(--accent-green); }
+        .icon-blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05)); color: #3b82f6; }
+        .icon-red { background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05)); color: #ef4444; }
+        .icon-indigo { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05)); color: #6366f1; }
+
+        /* Loading State */
+        .tile-loading {
+            height: 60px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 100%);
+            background-size: 200% 100%;
+            border-radius: 8px;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes tileReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes medalBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Error State */
+        .error-state {
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: var(--accent-purple);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="medal-container">
+                <svg class="medal-svg" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#cc2e1f;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#e63946;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#cc2e1f;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#cc9900;stop-opacity:1" />
+                        </linearGradient>
+                        <filter id="shadow">
+                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.4"/>
+                        </filter>
+                    </defs>
+                    <path d="M 15 0 L 35 40 L 30 80 Q 25 90 15 100 L 20 5 Z" fill="url(#redGrad)" stroke="#8b1a13" stroke-width="0.5" filter="url(#shadow)"/>
+                    <path d="M 105 0 L 85 40 L 90 80 Q 95 90 105 100 L 100 5 Z" fill="url(#redGrad)" stroke="#8b1a13" stroke-width="0.5" filter="url(#shadow)"/>
+                    <circle cx="60" cy="90" r="38" fill="url(#goldGrad)" stroke="#aa7f1f" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="60" cy="90" r="35" fill="none" stroke="#e6c200" stroke-width="1" opacity="0.5"/>
+                    <text x="60" y="105" font-size="32" font-weight="bold" fill="#8b6f00" text-anchor="middle" font-family="Arial, sans-serif">1</text>
+                    <ellipse cx="45" cy="75" rx="12" ry="15" fill="white" opacity="0.2"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>Life Dashboard</h1>
+                <p class="header-subtitle">Championship Living</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard" id="dashboard"></div>
+    </div>
+
+    <div class="footer">
+        <p>Dashboard synced in real-time • Tap an app to open it</p>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+
+    <script>
+        // App Configuration in specific order: 2 columns, 4 rows
+        const APPS = [
+            // Row 1
+            {
+                id: 'happyFamily',
+                name: 'HappyFamily',
+                icon: '👨‍👩‍👧‍👦',
+                color: 'purple',
+                url: 'https://dineshraj66.github.io/HappyFamily/',
+                description: 'Tasks assigned to Dinesh',
+                type: 'stat'
+            },
+            {
+                id: 'pageTurn',
+                name: 'PageTurn',
+                icon: '📖',
+                color: 'cyan',
+                url: 'https://dineshraj66.github.io/Page_Turn/',
+                description: 'Current book reading progress',
+                type: 'progress'
+            },
+            // Row 2
+            {
+                id: 'dailyReminder',
+                name: 'Daily Reminder',
+                icon: '🔔',
+                color: 'indigo',
+                url: 'https://dineshraj66.github.io/Daily-Reminder-App/',
+                description: 'Reminders for today',
+                type: 'stat'
+            },
+            {
+                id: 'lifeLog',
+                name: 'Life Log',
+                icon: '📔',
+                color: 'blue',
+                url: 'https://dineshraj66.github.io/Life_Log/',
+                description: 'Hours logged today',
+                type: 'stat'
+            },
+            // Row 3
+            {
+                id: 'tradeTracker',
+                name: 'Trade Tracker',
+                icon: '📈',
+                color: 'green',
+                url: 'https://dineshraj66.github.io/Trade-Tracker/',
+                description: 'Goal progress',
+                type: 'progress'
+            },
+            {
+                id: 'loveToday',
+                name: 'Love Today',
+                icon: '💕',
+                color: 'amber',
+                url: 'https://dineshraj66.github.io/Love-Today/',
+                description: 'Activities today',
+                type: 'stat'
+            },
+            // Row 4
+            {
+                id: 'cashLedger',
+                name: 'Cash Ledger',
+                icon: '💰',
+                color: 'red',
+                url: 'https://dineshraj66.github.io/Cash-Ledger/',
+                description: 'Total cash entries today',
+                type: 'stat'
+            },
+            {
+                id: 'angryBird',
+                name: 'Angry Bird',
+                icon: '😠',
+                color: 'pink',
+                url: 'https://dineshraj66.github.io/Angry-Bird/',
+                description: 'Entries logged today',
+                type: 'stat'
+            }
+        ];
+
+        // Initialize Dashboard
+        function initDashboard() {
+            const dashboard = document.getElementById('dashboard');
+            
+            APPS.forEach(app => {
+                const tile = createTile(app);
+                dashboard.appendChild(tile);
+            });
+        }
+
+        function createTile(app) {
+            const tile = document.createElement('div');
+            tile.className = 'app-tile';
+            
+            let contentHTML = `
+                <div class="tile-header">
+                    <div class="tile-icon icon-${app.color}">${app.icon}</div>
+                    <div class="tile-title">${app.name}</div>
+                </div>
+            `;
+
+            if (app.type === 'progress') {
+                contentHTML += `
+                    <div class="tile-content">
+                        <div class="progress-circle">
+                            <svg class="progress-svg" viewBox="0 0 160 160">
+                                <circle class="progress-background" cx="80" cy="80" r="70"></circle>
+                                <circle class="progress-bar" cx="80" cy="80" r="70" style="stroke: var(--accent-${getColorVar(app.color)});" id="pb-${app.id}"></circle>
+                            </svg>
+                            <div class="progress-text">
+                                <div class="progress-value" id="val-${app.id}">--</div>
+                                <div class="progress-unit">%</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                contentHTML += `
+                    <div class="tile-content">
+                        <div class="stat-display">
+                            <div class="stat-column">
+                                <div class="stat-label">${app.description}</div>
+                                <div class="stat-value" id="val-${app.id}">--</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            tile.innerHTML = contentHTML;
+            
+            tile.addEventListener('click', () => {
+                window.location.href = app.url;
+            });
+
+            // Fetch data
+            fetchAppData(app, tile);
+
+            // Refresh every 30 seconds
+            setInterval(() => fetchAppData(app, tile), 30000);
+
+            return tile;
+        }
+
+        function getColorVar(color) {
+            const colorMap = {
+                'cyan': 'cyan',
+                'purple': 'purple',
+                'pink': 'pink',
+                'amber': 'amber',
+                'green': 'green',
+                'blue': 'cyan',
+                'red': 'pink',
+                'indigo': 'purple'
+            };
+            return colorMap[color] || 'cyan';
+        }
+
+        async function fetchAppData(app, tile) {
+            try {
+                const data = await getAppMetrics(app);
+                
+                if (app.type === 'progress') {
+                    const valueEl = tile.querySelector(`#val-${app.id}`);
+                    const barEl = tile.querySelector(`#pb-${app.id}`);
+                    
+                    const percentage = data.value;
+                    valueEl.textContent = percentage;
+                    
+                    // Progress bar animation
+                    const circumference = 2 * Math.PI * 70;
+                    const offset = circumference - (percentage / 100) * circumference;
+                    barEl.style.strokeDasharray = circumference;
+                    barEl.style.strokeDashoffset = offset;
+                } else {
+                    const valueEl = tile.querySelector(`#val-${app.id}`);
+                    valueEl.textContent = data.value;
+                }
+            } catch (error) {
+                const valueEl = tile.querySelector(`[id^="val-${app.id}"]`);
+                if (valueEl) valueEl.textContent = '--';
+            }
+        }
+
+        async function getAppMetrics(app) {
+            // Mock data - replace with Firebase calls
+            const metrics = {
+                happyFamily: { value: '3' },
+                pageTurn: { value: 65 },
+                dailyReminder: { value: '5' },
+                lifeLog: { value: '8.5 hrs' },
+                tradeTracker: { value: 78 },
+                loveToday: { value: '4' },
+                cashLedger: { value: '₹2,450' },
+                angryBird: { value: '2' }
+            };
+            return metrics[app.id] || { value: '--' };
+        }
+
+        // PWA Registration
+        if ('serviceWorkerContainer' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>
