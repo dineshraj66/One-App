@@ -471,9 +471,9 @@
                 description: 'Tasks assigned to Dinesh',
                 type: 'stat',
                 firebaseConfig: {
-                apiKey: "AIzaSyAYMam4tBdUxASImlaYiHMw0RiBHUWtaWk",
-                databaseURL: "https://happyfamily-e4f68-default-rtdb.asia-southeast1.firebasedatabase.app",
-                projectId: "happyfamily-e4f68",
+                    apiKey: "AIzaSyCtd4RP2qPuB3zJZbEsG0FBqb8OQ1EeHqI",
+                    projectId: "happyfamily-e4f68",
+                    databaseURL: "https://happyfamily-e4f68-default-rtdb.asia-southeast1.firebasedatabase.app"
                 }
             },
             {
@@ -481,7 +481,7 @@
                 name: 'PageTurn',
                 icon: '📖',
                 color: 'cyan',
-                url: 'https://dineshraj66.github.io/Page_Turn/',
+                url: 'https://dk-pageturn.github.io/PageTurn/',
                 description: 'Current book reading progress',
                 type: 'progress'
             },
@@ -491,7 +491,7 @@
                 name: 'Daily Reminder',
                 icon: '🔔',
                 color: 'indigo',
-                url: 'https://dineshraj66.github.io/Daily-Reminder-App/',
+                url: 'https://dk-dailyreminder.github.io/DailyReminder/',
                 description: 'Reminders for today',
                 type: 'stat'
             },
@@ -500,7 +500,7 @@
                 name: 'Life Log',
                 icon: '📔',
                 color: 'blue',
-                url: 'https://dineshraj66.github.io/Life_Log/',
+                url: 'https://dk-lifelog.github.io/LifeLog/',
                 description: 'Hours logged today',
                 type: 'stat'
             },
@@ -510,7 +510,7 @@
                 name: 'Trade Tracker',
                 icon: '📈',
                 color: 'green',
-                url: 'https://dineshraj66.github.io/Trade-Tracker/',
+                url: 'https://dk-tradetracker.github.io/TradeTracker/',
                 description: 'Goal progress',
                 type: 'progress'
             },
@@ -519,7 +519,7 @@
                 name: 'Love Today',
                 icon: '💕',
                 color: 'amber',
-                url: 'https://dineshraj66.github.io/Love-Today/',
+                url: 'https://dk-lovetoday.github.io/LoveToday/',
                 description: 'Activities today',
                 type: 'stat'
             },
@@ -529,7 +529,7 @@
                 name: 'Cash Ledger',
                 icon: '💰',
                 color: 'red',
-                url: 'https://dineshraj66.github.io/Cash-Ledger/',
+                url: 'https://dk-cashledger.github.io/CashLedger/',
                 description: 'Total cash entries today',
                 type: 'stat'
             },
@@ -538,7 +538,7 @@
                 name: 'Angry Bird',
                 icon: '😠',
                 color: 'pink',
-                url: 'https://dineshraj66.github.io/Angry-Bird/',
+                url: 'https://dk-angrybird.github.io/AngryBird/',
                 description: 'Entries logged today',
                 type: 'stat'
             }
@@ -648,19 +648,63 @@
             }
         }
 
+        // ============ HAPPYFAMILY - REALTIME DATABASE ============
+        async function getHappyFamilyData(db) {
+            try {
+                // Your structure: happyFamily/items/[itemId]
+                // Fields: assignTo (who it's assigned to), status (pending/done)
+                const snapshot = await db.ref('happyFamily/items').get();
+                
+                if (!snapshot.exists()) {
+                    return { value: '0' };
+                }
+
+                const items = snapshot.val();
+                let count = 0;
+
+                // Count items assigned to "Dinesh" with status != "done"
+                Object.keys(items).forEach(key => {
+                    const item = items[key];
+                    // Check: assignTo == "Dinesh" (capital D) AND status != "done"
+                    if (item.assignTo === 'Dinesh' && item.status !== 'done') {
+                        count++;
+                    }
+                });
+
+                return { value: count.toString() };
+            } catch (e) {
+                console.error('HappyFamily error:', e);
+                return { value: '--' };
+            }
+        }
+
         async function getAppMetrics(app) {
-            // Mock data - replace with Firebase calls
-            const metrics = {
-                happyFamily: { value: '3' },
-                pageTurn: { value: 65 },
-                dailyReminder: { value: '5' },
-                lifeLog: { value: '8.5 hrs' },
-                tradeTracker: { value: 78 },
-                loveToday: { value: '4' },
-                cashLedger: { value: '₹2,450' },
-                angryBird: { value: '2' }
-            };
-            return metrics[app.id] || { value: '--' };
+            try {
+                // Initialize Firebase Realtime Database for HappyFamily
+                if (app.id === 'happyFamily') {
+                    if (!app.db) {
+                        const appInstance = firebase.initializeApp(app.firebaseConfig, app.id);
+                        app.db = firebase.database(appInstance);
+                    }
+                    return await getHappyFamilyData(app.db);
+                }
+
+                // Mock data for other apps (will update later)
+                const metrics = {
+                    happyFamily: { value: '3' },
+                    pageTurn: { value: 65 },
+                    dailyReminder: { value: '5' },
+                    lifeLog: { value: '8.5 hrs' },
+                    tradeTracker: { value: 78 },
+                    loveToday: { value: '4' },
+                    cashLedger: { value: '₹2,450' },
+                    angryBird: { value: '2' }
+                };
+                return metrics[app.id] || { value: '--' };
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return { value: '--' };
+            }
         }
 
         // PWA Registration
