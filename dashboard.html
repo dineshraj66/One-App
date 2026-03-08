@@ -126,11 +126,12 @@
             .dashboard {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
-                padding: 16px 8px;
+                padding: 12px 6px;
             }
             
             .container {
-                padding: 16px 8px;
+                padding: 12px 6px;
+                max-width: 100%;
             }
 
             .header {
@@ -148,6 +149,76 @@
 
             .header-text h1 {
                 font-size: 20px;
+                word-break: break-word;
+            }
+
+            .header-text p {
+                font-size: 12px;
+            }
+
+            /* Mobile Tile Adjustments */
+            .app-tile {
+                padding: 16px 12px;
+                gap: 12px;
+                min-height: auto;
+                border-radius: 12px;
+            }
+
+            .app-icon {
+                font-size: 32px;
+            }
+
+            .app-header {
+                gap: 8px;
+            }
+
+            .app-title {
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 1.2;
+                word-break: break-word;
+                overflow-wrap: break-word;
+            }
+
+            /* Progress Circle Mobile */
+            .progress-circle {
+                width: 100px;
+                height: 100px;
+                margin: 10px auto;
+            }
+
+            .progress-value {
+                font-size: 28px;
+            }
+
+            .progress-unit {
+                font-size: 11px;
+            }
+
+            .progress-background {
+                stroke-width: 8;
+            }
+
+            .progress-bar {
+                stroke-width: 8;
+            }
+
+            /* Stat Display Mobile */
+            .stat-display {
+                padding: 12px;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .stat-label {
+                font-size: 12px;
+                text-transform: uppercase;
+            }
+
+            .stat-value {
+                font-size: 24px;
+                word-break: break-word;
+                overflow-wrap: break-word;
             }
         }
 
@@ -176,6 +247,30 @@
         .app-tile:nth-child(6) { animation-delay: 0.35s; }
         .app-tile:nth-child(7) { animation-delay: 0.4s; }
         .app-tile:nth-child(8) { animation-delay: 0.45s; }
+
+        /* App Header and Title */
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-icon {
+            font-size: 40px;
+            flex-shrink: 0;
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
 
         /* Unique Colors for Each App */
         /* HappyFamily - Purple/Pink */
