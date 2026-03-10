@@ -813,8 +813,8 @@
                 icon: '💕',
                 color: 'amber',
                 url: getAppUrl('loveToday'),
-                description: 'Activities today',
-                type: 'stat'
+                description: 'Monthly goal',
+                type: 'progress'
             },
             // Row 4
             {
@@ -922,12 +922,19 @@
                     const valueEl = tile.querySelector(`#val-${app.id}`);
                     const barEl = tile.querySelector(`#pb-${app.id}`);
                     
-                    const percentage = data.value;
-                    valueEl.textContent = percentage;
+                    // Handle LoveToday special case: show "3/10" format
+                    if (app.id === 'loveToday') {
+                        const count = data.value;
+                        const target = data.target;
+                        valueEl.textContent = `${count}/${target}`;
+                    } else {
+                        const percentage = data.value;
+                        valueEl.textContent = percentage;
+                    }
                     
                     // Progress bar animation
                     const circumference = 2 * Math.PI * 70;
-                    const offset = circumference - (percentage / 100) * circumference;
+                    const offset = circumference - (data.percentage / 100) * circumference;
                     barEl.style.strokeDasharray = circumference;
                     barEl.style.strokeDashoffset = offset;
                 } else {
@@ -1242,10 +1249,10 @@
             try {
                 console.log('💕 getLoveTodayData called');
                 
-                // Get today's date in YYYY-MM-DD format
+                // Get current month in YYYY-MM format
                 const today = new Date();
-                const todayString = today.toISOString().split('T')[0]; // "2026-03-08"
-                console.log(`💕 Today's date: ${todayString}`);
+                const currentMonth = today.toISOString().slice(0, 7); // "2026-03"
+                console.log(`💕 Current month: ${currentMonth}`);
                 
                 // Get LoveToday Firebase config from config.js
                 const loveTodayConfig = getFirebaseConfig('loveToday');
@@ -1272,10 +1279,11 @@
                 
                 if (snapshot.empty) {
                     console.log('❌ LoveToday: No entries found');
-                    return { value: '0' };
+                    return { value: 0, target: 10, percentage: 0 };
                 }
 
-                let todayCount = 0;
+                let monthlyCount = 0;
+                const monthlyTarget = 10; // Monthly target
 
                 // Loop through all entries
                 snapshot.forEach(doc => {
@@ -1283,24 +1291,25 @@
                     
                     // Check if entry has datetime field
                     if (entry.datetime) {
-                        // Extract date from datetime (format: "2026-03-08T11:22")
-                        const entryDate = entry.datetime.split('T')[0]; // "2026-03-08"
-                        console.log(`   datetime: ${entry.datetime}, date: ${entryDate}`);
+                        // Extract month from datetime (format: "2026-03-08T11:22")
+                        const entryMonth = entry.datetime.slice(0, 7); // "2026-03"
+                        console.log(`   datetime: ${entry.datetime}, month: ${entryMonth}`);
                         
-                        // Check if entry is for today
-                        if (entryDate === todayString) {
-                            console.log(`   ✓ TODAY'S ENTRY - COUNTED`);
-                            todayCount++;
+                        // Check if entry is for current month
+                        if (entryMonth === currentMonth) {
+                            console.log(`   ✓ CURRENT MONTH ENTRY - COUNTED`);
+                            monthlyCount++;
                         }
                     }
                 });
 
-                console.log(`✅ LoveToday Final count: ${todayCount} entries today`);
-                return { value: todayCount.toString() };
+                const percentage = Math.round((monthlyCount / monthlyTarget) * 100);
+                console.log(`✅ LoveToday Monthly: ${monthlyCount}/${monthlyTarget} = ${percentage}%`);
+                return { value: monthlyCount, target: monthlyTarget, percentage: percentage };
             } catch (e) {
                 console.error('❌ LoveToday error:', e);
                 console.error('Stack:', e.stack);
-                return { value: '--' };
+                return { value: 0, target: 10, percentage: 0 };
             }
         }
 
