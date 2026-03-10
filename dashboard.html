@@ -1079,19 +1079,19 @@
                 // Loop through all reminders
                 Object.keys(reminders).forEach(reminderId => {
                     const reminder = reminders[reminderId];
-                    // console.log(`🔎 Checking reminder ${reminderId}:`, reminder);
+                    console.log(`🔎 Checking reminder ${reminderId}:`, reminder);
                     
                     // Extract date from datetime field (format: "2026-03-08T09:06:00.000Z")
                     if (reminder.datetime) {
                         const reminderDate = reminder.datetime.split('T')[0]; // Get YYYY-MM-DD part
-                        // console.log(`   datetime: ${reminder.datetime}, date: ${reminderDate}`);
+                        console.log(`   datetime: ${reminder.datetime}, date: ${reminderDate}, done: ${reminder.done}`);
                         
-                        // Check if reminder is for today AND NOT completed
-                        if (reminderDate === todayString && reminder.status !== 'completed') {
-                            console.log(`   ✓ TODAY'S INCOMPLETE REMINDER - COUNTED (status: ${reminder.status})`);
+                        // Check if reminder is for today AND NOT done (done: false)
+                        if (reminderDate === todayString && reminder.done === false) {
+                            console.log(`   ✓ TODAY'S INCOMPLETE REMINDER - COUNTED (done: false)`);
                             incompleteCount++;
-                        } else if (reminderDate === todayString && reminder.status === 'completed') {
-                            console.log(`   ✗ TODAY'S COMPLETED REMINDER - NOT COUNTED`);
+                        } else if (reminderDate === todayString && reminder.done === true) {
+                            console.log(`   ✗ TODAY'S COMPLETED REMINDER - NOT COUNTED (done: true)`);
                         }
                     }
                 });
