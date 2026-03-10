@@ -1104,20 +1104,6 @@
                 return { value: '--', hasIncomplete: false };
             }
         }
-                        } else {
-                            // console.log(`   ✗ Not today (${reminderDate} != ${todayString})`);
-                        }
-                    }
-                });
-
-                // console.log(`✅ Final count: ${todayCount} reminders today`);
-                return { value: todayCount.toString() };
-            } catch (e) {
-                console.error('❌ DailyReminder error:', e);
-                console.error('Stack:', e.stack);
-                return { value: '--' };
-            }
-        }
 
         // ============ LIFELOG - FIRESTORE ============
         async function getLifeLogData() {
