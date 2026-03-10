@@ -456,12 +456,12 @@
         }
 
         .progress-svg {
-            transform: rotate(-90deg);
             width: 100%;
             height: 100%;
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
         }
 
         .progress-background {
@@ -1051,11 +1051,11 @@
                 const progressPercent = Math.round((currentPage / totalPages) * 100);
                 
                 // console.log(`✅ Progress: ${currentPage}/${totalPages} = ${progressPercent}%`);
-                return { value: progressPercent };
+                return { value: progressPercent, percentage: progressPercent };
             } catch (e) {
                 console.error('❌ PageTurn error:', e);
                 console.error('Stack:', e.stack);
-                return { value: '--' };
+                return { value: '--', percentage: 0 };
             }
         }
 
@@ -1236,11 +1236,11 @@
                 const progressPercent = Math.round((tradesCount / targetValue) * 100);
                 
                 console.log(`✅ TradeTracker Progress: ${tradesCount}/${targetValue} = ${progressPercent}%`);
-                return { value: progressPercent };
+                return { value: progressPercent, percentage: progressPercent };
             } catch (e) {
                 console.error('❌ TradeTracker error:', e);
                 console.error('Stack:', e.stack);
-                return { value: '--' };
+                return { value: '--', percentage: 0 };
             }
         }
 
