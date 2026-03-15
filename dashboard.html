@@ -107,12 +107,58 @@
             padding: 40px 20px;
         }
 
-        /* Dashboard Grid - 2 columns */
-        .dashboard {
+        /* Dashboard Carousel */
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-out;
+            width: 100%;
+        }
+
+        .carousel-page {
+            flex: 0 0 100%;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 24px;
-            animation: fadeIn 0.8s ease-out 0.2s both;
+            padding: 0;
+            min-width: 100%;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 24px;
+            padding-bottom: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .dot.active {
+            background: #00d4ff;
+            transform: scale(1.3);
+        }
+
+        .dot:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: contents;
         }
 
         @media (max-width: 1024px) {
@@ -204,8 +250,20 @@
                 stroke-width: 5;
             }
 
-            /* Stat Display Mobile */
-            .stat-display {
+            .carousel-page {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .carousel-dots {
+                margin-top: 16px;
+                padding-bottom: 10px;
+            }
+
+            .dot {
+                width: 10px;
+                height: 10px;
+            }
                 padding: 10px;
                 flex-direction: column;
                 gap: 6px;
@@ -771,18 +829,16 @@
             console.error('❌ Firebase initialization error:', err.message);
         }
 
-        // App Configuration in specific order: 2 columns, 4 rows
         const APPS = [
-            // Row 1
+            // PAGE 1
             {
-                id: 'happyFamily',
-                name: 'HappyFamily',
-                icon: '👨‍👩‍👧‍👦',
-                color: 'purple',
-                url: getAppUrl('happyFamily'),
-                description: 'Tasks assigned to Dinesh',
-                type: 'stat',
-                firebaseConfig: getFirebaseConfig('happyFamily')
+                id: 'tradeTracker',
+                name: 'Trade Tracker',
+                icon: '📈',
+                color: 'green',
+                url: getAppUrl('tradeTracker'),
+                description: 'Goal progress',
+                type: 'progress'
             },
             {
                 id: 'pageTurn',
@@ -791,35 +847,6 @@
                 color: 'cyan',
                 url: getAppUrl('pageTurn'),
                 description: 'Current book reading progress',
-                type: 'progress'
-            },
-            // Row 2
-            {
-                id: 'dailyReminder',
-                name: 'Daily Reminder',
-                icon: '🔔',
-                color: 'indigo',
-                url: getAppUrl('dailyReminder'),
-                description: 'Reminders for today',
-                type: 'stat'
-            },
-            {
-                id: 'lifeLog',
-                name: 'Life Log',
-                icon: '📔',
-                color: 'blue',
-                url: getAppUrl('lifeLog'),
-                description: 'Hours logged today',
-                type: 'stat'
-            },
-            // Row 3
-            {
-                id: 'tradeTracker',
-                name: 'Trade Tracker',
-                icon: '📈',
-                color: 'green',
-                url: getAppUrl('tradeTracker'),
-                description: 'Goal progress',
                 type: 'progress'
             },
             {
@@ -831,16 +858,6 @@
                 description: 'Monthly goal',
                 type: 'progress'
             },
-            // Row 4
-            {
-                id: 'cashLedger',
-                name: 'Cash Ledger',
-                icon: '💰',
-                color: 'red',
-                url: getAppUrl('cashLedger'),
-                description: 'Total cash entries today',
-                type: 'stat'
-            },
             {
                 id: 'angryBird',
                 name: 'Angry Bird',
@@ -849,6 +866,44 @@
                 url: getAppUrl('angryBird'),
                 description: 'Entries logged today',
                 type: 'stat'
+            },
+            // PAGE 2
+            {
+                id: 'lifeLog',
+                name: 'Life Log',
+                icon: '📔',
+                color: 'blue',
+                url: getAppUrl('lifeLog'),
+                description: 'Hours logged today',
+                type: 'stat'
+            },
+            {
+                id: 'happyFamily',
+                name: 'HappyFamily',
+                icon: '👨‍👩‍👧‍👦',
+                color: 'purple',
+                url: getAppUrl('happyFamily'),
+                description: 'Tasks assigned to Dinesh',
+                type: 'stat',
+                firebaseConfig: getFirebaseConfig('happyFamily')
+            },
+            {
+                id: 'dailyReminder',
+                name: 'Daily Reminder',
+                icon: '🔔',
+                color: 'indigo',
+                url: getAppUrl('dailyReminder'),
+                description: 'Reminders for today',
+                type: 'stat'
+            },
+            {
+                id: 'cashLedger',
+                name: 'Cash Ledger',
+                icon: '💰',
+                color: 'red',
+                url: getAppUrl('cashLedger'),
+                description: 'Total cash entries today',
+                type: 'stat'
             }
         ];
 
@@ -856,10 +911,61 @@
         function initDashboard() {
             const dashboard = document.getElementById('dashboard');
             
-            APPS.forEach(app => {
+            // Create carousel container
+            const carouselContainer = document.createElement('div');
+            carouselContainer.className = 'carousel-container';
+            
+            const carouselWrapper = document.createElement('div');
+            carouselWrapper.className = 'carousel-wrapper';
+            
+            // Create 2 pages (4 apps each)
+            const page1 = document.createElement('div');
+            page1.className = 'carousel-page';
+            
+            const page2 = document.createElement('div');
+            page2.className = 'carousel-page';
+            
+            // Add apps to pages (first 4 to page1, rest to page2)
+            APPS.forEach((app, index) => {
                 const tile = createTile(app);
-                dashboard.appendChild(tile);
+                if (index < 4) {
+                    page1.appendChild(tile);
+                } else {
+                    page2.appendChild(tile);
+                }
             });
+            
+            carouselWrapper.appendChild(page1);
+            carouselWrapper.appendChild(page2);
+            carouselContainer.appendChild(carouselWrapper);
+            dashboard.appendChild(carouselContainer);
+            
+            // Create dots
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'carousel-dots';
+            
+            for (let i = 0; i < 2; i++) {
+                const dot = document.createElement('div');
+                dot.className = `dot ${i === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToPage(i);
+                dotsContainer.appendChild(dot);
+            }
+            
+            dashboard.appendChild(dotsContainer);
+            
+            // Add carousel functionality
+            let currentPage = 0;
+            
+            window.goToPage = function(pageNum) {
+                currentPage = pageNum;
+                const offset = -currentPage * 100;
+                carouselWrapper.style.transform = `translateX(${offset}%)`;
+                
+                // Update dots
+                document.querySelectorAll('.dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === pageNum);
+                });
+            };
         }
 
         function createTile(app) {
