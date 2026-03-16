@@ -898,40 +898,55 @@
             margin-bottom: 16px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
             animation: slideIn 0.3s ease-out;
+            position: relative;
+            min-height: 200px;
+            flex-direction: column;
         }
 
         .affirmation-text {
             flex: 1;
             font-size: 16px;
-            line-height: 1.6;
+            line-height: 1.8;
             word-wrap: break-word;
+            width: 100%;
         }
 
         .affirmation-actions {
             display: flex;
             gap: 8px;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 10;
         }
 
         .edit-btn, .delete-btn {
-            padding: 6px 12px;
+            width: 36px;
+            height: 36px;
+            padding: 0;
             border: none;
-            border-radius: 6px;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 18px;
             transition: all 0.2s;
             background: rgba(255, 255, 255, 0.2);
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .edit-btn:hover {
             background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
         }
 
         .delete-btn:hover {
             background: rgba(255, 100, 100, 0.5);
+            transform: scale(1.1);
         }
 
         .affirmations-controls {
@@ -1142,14 +1157,20 @@
             .header-content {
                 flex-wrap: wrap;
                 gap: 12px;
+                justify-content: space-between;
             }
 
             .header-left {
                 width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 12px;
             }
 
             .affirmations-btn {
-                width: 100%;
+                width: 45px;
+                height: 45px;
+                font-size: 24px;
             }
 
             .affirmations-container {
@@ -1167,6 +1188,23 @@
 
             .affirmations-actions {
                 flex-direction: column;
+            }
+
+            .affirmation-item {
+                min-height: 180px;
+                padding: 16px;
+            }
+
+            .affirmation-text {
+                font-size: 15px;
+                line-height: 1.7;
+                padding-top: 35px;
+            }
+
+            .edit-btn, .delete-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
             }
         }
     </style>
@@ -2392,11 +2430,11 @@
                         item.className = 'affirmation-item';
                         item.style.background = affirmation.color;
                         item.innerHTML = `
-                            <div class="affirmation-text">${affirmation.text}</div>
                             <div class="affirmation-actions">
-                                <button class="edit-btn" onclick="affirmationsManager.openEditModal('${affirmation.id}')">Edit</button>
-                                <button class="delete-btn" onclick="affirmationsManager.deleteAffirmation('${affirmation.id}')">Delete</button>
+                                <button class="edit-btn" onclick="affirmationsManager.openEditModal('${affirmation.id}')" title="Edit">✏️</button>
+                                <button class="delete-btn" onclick="affirmationsManager.deleteAffirmation('${affirmation.id}')" title="Delete">✕</button>
                             </div>
+                            <div class="affirmation-text">${affirmation.text}</div>
                         `;
                         pageContainer.appendChild(item);
                     });
