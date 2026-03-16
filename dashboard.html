@@ -767,45 +767,506 @@
         .footer a:hover {
             color: var(--accent-purple);
         }
+
+        /* ============ AFFIRMATIONS STYLES ============ */
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .affirmations-btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ff9500 100%);
+            border: none;
+            color: #333;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 28px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bulbGlow 2s ease-in-out infinite;
+        }
+
+        .affirmations-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .affirmations-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes bulbGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+
+        /* Affirmations Modal */
+        .affirmations-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .affirmations-modal.active {
+            display: flex;
+        }
+
+        .affirmations-container {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(15, 15, 30, 0.8) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .affirmations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .affirmations-header h2 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .affirmations-content {
+            padding: 24px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .affirmations-page {
+            flex: 1;
+            min-height: 250px;
+            margin-bottom: 24px;
+        }
+
+        .affirmation-item {
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .affirmation-text {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .affirmation-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 100, 100, 0.5);
+        }
+
+        .affirmations-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+            padding: 12px 0;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            color: #aaa;
+            font-size: 14px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .affirmations-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            flex: 1;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Edit Modal */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .edit-modal.active {
+            display: flex;
+        }
+
+        .edit-modal-content {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(15, 15, 30, 0.8) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .edit-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .edit-modal-header h3 {
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .edit-modal-body {
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #aaa;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .color-picker input[type="color"] {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #colorPreview {
+            width: 80px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .edit-modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel, .btn-save {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: #aaa;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: white;
+        }
+
+        .btn-save:hover {
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .header-left {
+                width: 100%;
+            }
+
+            .affirmations-btn {
+                width: 100%;
+            }
+
+            .affirmations-container {
+                max-height: 90vh;
+            }
+
+            .affirmations-controls {
+                gap: 12px;
+            }
+
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+
+            .affirmations-actions {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-content">
-            <div class="medal-container">
-                <svg class="medal-svg" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:#cc2e1f;stop-opacity:1" />
-                            <stop offset="50%" style="stop-color:#e63946;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#cc2e1f;stop-opacity:1" />
-                        </linearGradient>
-                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
-                            <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#cc9900;stop-opacity:1" />
-                        </linearGradient>
-                        <filter id="shadow">
-                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.4"/>
-                        </filter>
-                    </defs>
-                    <path d="M 15 0 L 35 40 L 30 80 Q 25 90 15 100 L 20 5 Z" fill="url(#redGrad)" stroke="#8b1a13" stroke-width="0.5" filter="url(#shadow)"/>
-                    <path d="M 105 0 L 85 40 L 90 80 Q 95 90 105 100 L 100 5 Z" fill="url(#redGrad)" stroke="#8b1a13" stroke-width="0.5" filter="url(#shadow)"/>
-                    <circle cx="60" cy="90" r="38" fill="url(#goldGrad)" stroke="#aa7f1f" stroke-width="2" filter="url(#shadow)"/>
-                    <circle cx="60" cy="90" r="35" fill="none" stroke="#e6c200" stroke-width="1" opacity="0.5"/>
-                    <text x="60" y="105" font-size="32" font-weight="bold" fill="#8b6f00" text-anchor="middle" font-family="Arial, sans-serif">1</text>
-                    <ellipse cx="45" cy="75" rx="12" ry="15" fill="white" opacity="0.2"/>
-                </svg>
+            <div class="header-left">
+                <div class="medal-container">
+                    <svg class="medal-svg" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#cc2e1f;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#e63946;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#cc2e1f;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#ffed4e;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#cc9900;stop-opacity:1" />
+                            </linearGradient>
+                            <filter id="shadow">
+                                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.4"/>
+                            </filter>
+                        </defs>
+                        <path d="M 15 0 L 35 40 L 30 80 Q 25 90 15 100 L 20 5 Z" fill="url(#redGrad)" stroke="#8b1a13" stroke-width="0.5" filter="url(#shadow)"/>
+                        <path d="M 105 0 L 85 40 L 90 80 Q 95 90 105 100 L 100 5 Z" fill="url(#redGrad)" stroke="#8b1a13" stroke-width="0.5" filter="url(#shadow)"/>
+                        <circle cx="60" cy="90" r="38" fill="url(#goldGrad)" stroke="#aa7f1f" stroke-width="2" filter="url(#shadow)"/>
+                        <circle cx="60" cy="90" r="35" fill="none" stroke="#e6c200" stroke-width="1" opacity="0.5"/>
+                        <text x="60" y="105" font-size="32" font-weight="bold" fill="#8b6f00" text-anchor="middle" font-family="Arial, sans-serif">1</text>
+                        <ellipse cx="45" cy="75" rx="12" ry="15" fill="white" opacity="0.2"/>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>Life Dashboard</h1>
+                    <p class="header-subtitle">Championship Living</p>
+                </div>
             </div>
-            <div class="header-text">
-                <h1>Life Dashboard</h1>
-                <p class="header-subtitle">Championship Living</p>
-            </div>
+            <button class="affirmations-btn" id="affirmationsBtn" title="Affirmations">
+                💡
+            </button>
         </div>
     </div>
 
     <div class="container">
         <div class="dashboard" id="dashboard"></div>
+    </div>
+
+    <!-- Affirmations Modal -->
+    <div class="affirmations-modal" id="affirmationsModal">
+        <div class="affirmations-container">
+            <div class="affirmations-header">
+                <h2>💡 Affirmations</h2>
+                <button class="close-btn" id="closeAffirmations">&times;</button>
+            </div>
+
+            <div class="affirmations-content">
+                <div class="affirmations-page" id="affirmationsPage"></div>
+                
+                <div class="affirmations-controls">
+                    <button class="nav-btn prev-btn" id="prevPageBtn">← Previous</button>
+                    <div class="page-info">
+                        <span id="pageNumber">Page 1</span> of <span id="totalPages">0</span>
+                    </div>
+                    <button class="nav-btn next-btn" id="nextPageBtn">Next →</button>
+                </div>
+
+                <div class="affirmations-actions">
+                    <button class="action-btn add-btn" id="addAffirmationBtn">+ Add Affirmation</button>
+                    <button class="action-btn new-page-btn" id="newPageBtn">+ New Page</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit/Add Affirmation Modal -->
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h3 id="editModalTitle">Add Affirmation</h3>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <div class="edit-modal-body">
+                <div class="form-group">
+                    <label>Affirmation Text:</label>
+                    <textarea id="affirmationText" placeholder="Enter your affirmation..." rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Color:</label>
+                    <div class="color-picker">
+                        <input type="color" id="affirmationColor" value="#667eea">
+                        <span id="colorPreview"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-modal-footer">
+                <button class="btn-cancel" id="cancelEditBtn">Cancel</button>
+                <button class="btn-save" id="saveAffirmationBtn">Save</button>
+            </div>
+        </div>
     </div>
 
     <div class="footer">
@@ -1722,13 +2183,249 @@
             }
         }
 
+        // ============ AFFIRMATIONS MODULE ============
+        
+        class AffirmationsManager {
+            constructor() {
+                this.affirmations = [];
+                this.currentPageIndex = 0;
+                this.editingAffirmationId = null;
+                this.db = null;
+                this.userId = 'dinesh';
+                this.initFirebase();
+                this.setupEventListeners();
+                this.loadAffirmations();
+            }
+
+            initFirebase() {
+                try {
+                    this.db = firebase.database(firebase.app('happyfamily'));
+                } catch (err) {
+                    console.warn('Firebase not available for affirmations:', err);
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('affirmationsBtn').addEventListener('click', () => this.openModal());
+                document.getElementById('closeAffirmations').addEventListener('click', () => this.closeModal());
+                document.getElementById('closeEditModal').addEventListener('click', () => this.closeEditModal());
+                document.getElementById('cancelEditBtn').addEventListener('click', () => this.closeEditModal());
+                document.getElementById('saveAffirmationBtn').addEventListener('click', () => this.saveAffirmation());
+                document.getElementById('addAffirmationBtn').addEventListener('click', () => this.openAddModal());
+                document.getElementById('newPageBtn').addEventListener('click', () => this.addNewPage());
+                document.getElementById('prevPageBtn').addEventListener('click', () => this.previousPage());
+                document.getElementById('nextPageBtn').addEventListener('click', () => this.nextPage());
+                
+                document.getElementById('affirmationColor').addEventListener('change', (e) => {
+                    document.getElementById('colorPreview').style.backgroundColor = e.target.value;
+                });
+            }
+
+            async loadAffirmations() {
+                if (this.db) {
+                    try {
+                        const snapshot = await this.db.ref(`affirmations/${this.userId}`).get();
+                        if (snapshot.exists()) {
+                            this.affirmations = snapshot.val();
+                        }
+                        this.renderCurrentPage();
+                    } catch (err) {
+                        console.error('Error loading affirmations:', err);
+                    }
+                } else {
+                    // Load from localStorage if Firebase unavailable
+                    const stored = localStorage.getItem('affirmations');
+                    if (stored) {
+                        this.affirmations = JSON.parse(stored);
+                    }
+                    this.renderCurrentPage();
+                }
+            }
+
+            async saveToFirebase() {
+                if (this.db) {
+                    try {
+                        await this.db.ref(`affirmations/${this.userId}`).set(this.affirmations);
+                    } catch (err) {
+                        console.error('Error saving to Firebase:', err);
+                    }
+                } else {
+                    localStorage.setItem('affirmations', JSON.stringify(this.affirmations));
+                }
+            }
+
+            openModal() {
+                document.getElementById('affirmationsModal').classList.add('active');
+            }
+
+            closeModal() {
+                document.getElementById('affirmationsModal').classList.remove('active');
+            }
+
+            openAddModal() {
+                this.editingAffirmationId = null;
+                document.getElementById('editModalTitle').textContent = 'Add Affirmation';
+                document.getElementById('affirmationText').value = '';
+                document.getElementById('affirmationColor').value = '#667eea';
+                document.getElementById('colorPreview').style.backgroundColor = '#667eea';
+                document.getElementById('editModal').classList.add('active');
+            }
+
+            openEditModal(affirmationId) {
+                const page = this.affirmations[this.currentPageIndex];
+                const affirmation = page.affirmations.find(a => a.id === affirmationId);
+                if (!affirmation) return;
+
+                this.editingAffirmationId = affirmationId;
+                document.getElementById('editModalTitle').textContent = 'Edit Affirmation';
+                document.getElementById('affirmationText').value = affirmation.text;
+                document.getElementById('affirmationColor').value = affirmation.color;
+                document.getElementById('colorPreview').style.backgroundColor = affirmation.color;
+                document.getElementById('editModal').classList.add('active');
+            }
+
+            closeEditModal() {
+                document.getElementById('editModal').classList.remove('active');
+                this.editingAffirmationId = null;
+            }
+
+            async saveAffirmation() {
+                const text = document.getElementById('affirmationText').value.trim();
+                const color = document.getElementById('affirmationColor').value;
+
+                if (!text) {
+                    alert('Please enter affirmation text');
+                    return;
+                }
+
+                if (this.affirmations.length === 0) {
+                    this.addNewPage();
+                }
+
+                const page = this.affirmations[this.currentPageIndex];
+                if (!page) return;
+
+                if (this.editingAffirmationId) {
+                    // Edit existing
+                    const affirmation = page.affirmations.find(a => a.id === this.editingAffirmationId);
+                    if (affirmation) {
+                        affirmation.text = text;
+                        affirmation.color = color;
+                    }
+                } else {
+                    // Add new
+                    page.affirmations.push({
+                        id: Date.now().toString(),
+                        text,
+                        color,
+                        createdAt: new Date().toISOString()
+                    });
+                }
+
+                await this.saveToFirebase();
+                this.renderCurrentPage();
+                this.closeEditModal();
+            }
+
+            addNewPage() {
+                const newPage = {
+                    id: Date.now().toString(),
+                    affirmations: [],
+                    color: this.getRandomColor(),
+                    createdAt: new Date().toISOString()
+                };
+                this.affirmations.push(newPage);
+                this.currentPageIndex = this.affirmations.length - 1;
+                this.saveToFirebase();
+                this.renderCurrentPage();
+            }
+
+            deleteAffirmation(affirmationId) {
+                if (confirm('Delete this affirmation?')) {
+                    const page = this.affirmations[this.currentPageIndex];
+                    page.affirmations = page.affirmations.filter(a => a.id !== affirmationId);
+                    this.saveToFirebase();
+                    this.renderCurrentPage();
+                }
+            }
+
+            previousPage() {
+                if (this.currentPageIndex > 0) {
+                    this.currentPageIndex--;
+                    this.renderCurrentPage();
+                }
+            }
+
+            nextPage() {
+                if (this.currentPageIndex < this.affirmations.length - 1) {
+                    this.currentPageIndex++;
+                    this.renderCurrentPage();
+                }
+            }
+
+            renderCurrentPage() {
+                const pageContainer = document.getElementById('affirmationsPage');
+                const totalPages = this.affirmations.length;
+
+                // Update page info
+                document.getElementById('pageNumber').textContent = `Page ${this.currentPageIndex + 1}`;
+                document.getElementById('totalPages').textContent = totalPages;
+
+                // Update button states
+                document.getElementById('prevPageBtn').disabled = this.currentPageIndex === 0;
+                document.getElementById('nextPageBtn').disabled = this.currentPageIndex === totalPages - 1;
+
+                // Render affirmations
+                pageContainer.innerHTML = '';
+
+                if (totalPages === 0) {
+                    pageContainer.innerHTML = '<p style="color: #999; text-align: center; padding: 40px 0;">No affirmations yet. Click "+ Add Affirmation" to start!</p>';
+                    return;
+                }
+
+                const page = this.affirmations[this.currentPageIndex];
+                if (!page.affirmations || page.affirmations.length === 0) {
+                    pageContainer.innerHTML = '<p style="color: #999; text-align: center; padding: 40px 0;">No affirmations on this page. Click "+ Add Affirmation" to add one!</p>';
+                } else {
+                    page.affirmations.forEach(affirmation => {
+                        const item = document.createElement('div');
+                        item.className = 'affirmation-item';
+                        item.style.background = affirmation.color;
+                        item.innerHTML = `
+                            <div class="affirmation-text">${affirmation.text}</div>
+                            <div class="affirmation-actions">
+                                <button class="edit-btn" onclick="affirmationsManager.openEditModal('${affirmation.id}')">Edit</button>
+                                <button class="delete-btn" onclick="affirmationsManager.deleteAffirmation('${affirmation.id}')">Delete</button>
+                            </div>
+                        `;
+                        pageContainer.appendChild(item);
+                    });
+                }
+            }
+
+            getRandomColor() {
+                const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#30cfd0'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+        }
+
+        let affirmationsManager;
+
+        // Initialize affirmations after Firebase is ready
+        function initAffirmations() {
+            affirmationsManager = new AffirmationsManager();
+        }
+
         // PWA Registration
         if ('serviceWorkerContainer' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(err => { /* SW registration failed */ });
         }
 
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', initDashboard);
+        document.addEventListener('DOMContentLoaded', () => {
+            initDashboard();
+            initAffirmations();
+        });
     </script>
 </body>
 </html>
